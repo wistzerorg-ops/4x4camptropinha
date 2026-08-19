@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscrição - Copa 4x4 FF</title>
+    <title>Copa 4x4 FF - Sistema Completo</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+
         :root {
             --bg-color: #050505;
             --surface-color: #111;
@@ -12,66 +14,478 @@
             --text-main: #fff;
             --text-muted: #aaa;
             --neon-shadow: 0 0 5px var(--neon-purple), 0 0 20px var(--neon-purple);
+            --danger: #ff2626;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        }
         
-        body { background-color: #000; color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        body { 
+            background-color: #000; 
+            color: var(--text-main); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            overflow: hidden; 
+        }
 
-        /* Emulador Mobile/PC */
-        #view-toggle { position: absolute; top: 20px; right: 20px; z-index: 9999; background: var(--surface-color); color: var(--neon-purple); border: 1px solid var(--neon-purple); box-shadow: var(--neon-shadow); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; }
-        #view-toggle:hover { background: var(--neon-purple); color: #fff; }
-        #view-toggle:active { transform: scale(0.9); }
+        /* Botões de controle de visualização */
+        #view-toggle { 
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            z-index: 9999; 
+            background: var(--surface-color); 
+            color: var(--neon-purple); 
+            border: 1px solid var(--neon-purple); 
+            box-shadow: var(--neon-shadow); 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            transition: 0.3s; 
+        }
+        #view-toggle:hover { 
+            background: var(--neon-purple); 
+            color: #fff; 
+        }
 
-        .app-container { background-color: var(--bg-color); position: relative; overflow-x: hidden; overflow-y: auto; transition: all 0.5s ease-in-out; scroll-behavior: smooth; }
+        .app-container { 
+            background-color: var(--bg-color); 
+            position: relative; 
+            overflow-x: hidden; 
+            overflow-y: auto; 
+            transition: all 0.5s ease-in-out; 
+            scroll-behavior: smooth; 
+        }
         
-        /* Modos */
-        .mobile-mode { width: 375px; height: 812px; border-radius: 40px; border: 8px solid #222; box-shadow: 0 0 50px rgba(176, 38, 255, 0.2); }
-        .pc-mode { width: 100vw; height: 100vh; border-radius: 0; border: none; }
-        .mobile-mode::-webkit-scrollbar { display: none; } /* Oculta scrollbar no mobile */
+        .mobile-mode { 
+            width: 375px; 
+            height: 812px; 
+            border-radius: 40px; 
+            border: 8px solid #222; 
+            box-shadow: 0 0 50px rgba(176, 38, 255, 0.2); 
+        }
+        .pc-mode { 
+            width: 100vw; 
+            height: 100vh; 
+            border-radius: 0; 
+            border: none; 
+        }
+        .mobile-mode::-webkit-scrollbar { 
+            display: none; 
+        }
 
-        /* Telas (Fade) */
-        .screen { width: 100%; min-height: 100%; position: absolute; top: 0; left: 0; padding: 20px; transition: opacity 0.4s ease; display: none; opacity: 0; }
-        .screen.active { display: block; opacity: 1; position: relative; }
+        /* Telas */
+        .screen { 
+            width: 100%; 
+            min-height: 100%; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            padding: 20px; 
+            transition: opacity 0.4s ease; 
+            display: none; 
+            opacity: 0; 
+        }
+        .screen.active { 
+            display: block; 
+            opacity: 1; 
+            position: relative; 
+        }
 
-        /* Header / Hero */
-        header { text-align: center; padding: 60px 20px; border-bottom: 1px solid rgba(176,38,255,0.3); }
-        header h1 { font-size: 2.5rem; color: var(--text-main); text-shadow: var(--neon-shadow); text-transform: uppercase; margin-bottom: 15px; }
-        header p { color: var(--text-muted); font-size: 1.1rem; }
+        /* Tabs de navegação */
+        .main-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: var(--surface-color);
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid #222;
+            box-shadow: 0 0 15px rgba(176, 38, 255, 0.2);
+        }
 
-        /* Seções de Conteúdo */
-        section { padding: 40px 20px; border-bottom: 1px solid rgba(176,38,255,0.1); }
-        h2 { color: var(--neon-purple); margin-bottom: 20px; font-size: 1.8rem; text-shadow: 0 0 10px rgba(176,38,255,0.5); text-transform: uppercase; }
+        .main-tab-btn {
+            background: transparent;
+            color: var(--text-main);
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+            flex: 1;
+        }
+
+        .main-tab-btn.active {
+            background: var(--neon-purple);
+            box-shadow: 0 0 15px var(--neon-shadow);
+            color: #fff;
+        }
+
+        /* Header */
+        header { 
+            text-align: center; 
+            padding: 60px 20px; 
+            border-bottom: 1px solid rgba(176,38,255,0.3); 
+        }
+        header h1 { 
+            font-size: 2.5rem; 
+            color: var(--text-main); 
+            text-shadow: var(--neon-shadow); 
+            text-transform: uppercase; 
+            margin-bottom: 15px; 
+        }
+        header p { 
+            color: var(--text-muted); 
+            font-size: 1.1rem; 
+        }
+
+        /* Seções */
+        section { 
+            padding: 40px 20px; 
+            border-bottom: 1px solid rgba(176,38,255,0.1); 
+        }
+        h2 { 
+            color: var(--neon-purple); 
+            margin-bottom: 20px; 
+            font-size: 1.8rem; 
+            text-shadow: 0 0 10px rgba(176,38,255,0.5); 
+            text-transform: uppercase; 
+            text-align: center;
+        }
         
-        .box { background: var(--surface-color); padding: 20px; border-radius: 12px; border: 1px solid rgba(176,38,255,0.3); margin-bottom: 15px; }
-        .box h3 { margin-bottom: 10px; color: #fff; }
-        .box p, .box li { color: var(--text-muted); line-height: 1.6; margin-bottom: 8px; }
-        ul { padding-left: 20px; }
+        .box { 
+            background: var(--surface-color); 
+            padding: 20px; 
+            border-radius: 12px; 
+            border: 1px solid rgba(176,38,255,0.3); 
+            margin-bottom: 15px; 
+        }
+        .box h3 { 
+            margin-bottom: 10px; 
+            color: #fff; 
+        }
+        .box p, .box li { 
+            color: var(--text-muted); 
+            line-height: 1.6; 
+            margin-bottom: 8px; 
+        }
+        ul { 
+            padding-left: 20px; 
+        }
 
-        /* Animações de Rolagem */
-        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.6s ease-out; }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
+        /* Animações */
+        .reveal { 
+            opacity: 0; 
+            transform: translateY(40px); 
+            transition: all 0.6s ease-out; 
+        }
+        .reveal.visible { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
 
-        /* Botão Flutuante (Inscrição) */
-        #fab-btn { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) scale(0.8); background: #000; color: var(--neon-purple); border: 2px solid var(--neon-purple); box-shadow: var(--neon-shadow); padding: 15px 40px; border-radius: 30px; font-size: 1.2rem; font-weight: bold; text-transform: uppercase; cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.4s ease; z-index: 1000; }
-        #fab-btn.show { opacity: 1; transform: translateX(-50%) scale(1); pointer-events: auto; }
-        #fab-btn:hover { background: var(--neon-purple); color: #fff; box-shadow: 0 0 30px var(--neon-purple); }
-        #fab-btn:active { transform: translateX(-50%) scale(0.9); }
+        /* Botão flutuante */
+        #fab-btn { 
+            position: fixed; 
+            bottom: 30px; 
+            left: 50%; 
+            transform: translateX(-50%) scale(0.8); 
+            background: #000; 
+            color: var(--neon-purple); 
+            border: 2px solid var(--neon-purple); 
+            box-shadow: var(--neon-shadow); 
+            padding: 15px 40px; 
+            border-radius: 30px; 
+            font-size: 1.2rem; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            cursor: pointer; 
+            opacity: 0; 
+            pointer-events: none; 
+            transition: all 0.4s ease; 
+            z-index: 1000; 
+        }
+        #fab-btn.show { 
+            opacity: 1; 
+            transform: translateX(-50%) scale(1); 
+            pointer-events: auto; 
+        }
+        #fab-btn:hover { 
+            background: var(--neon-purple); 
+            color: #fff; 
+            box-shadow: 0 0 30px var(--neon-purple); 
+        }
 
-        /* Animação Pulso do botão */
-        @keyframes pulse { 0% { box-shadow: 0 0 5px var(--neon-purple); } 50% { box-shadow: 0 0 25px var(--neon-purple); } 100% { box-shadow: 0 0 5px var(--neon-purple); } }
-        #fab-btn.show { animation: pulse 2s infinite; }
+        @keyframes pulse { 
+            0% { box-shadow: 0 0 5px var(--neon-purple); } 
+            50% { box-shadow: 0 0 25px var(--neon-purple); } 
+            100% { box-shadow: 0 0 5px var(--neon-purple); } 
+        }
+        #fab-btn.show { 
+            animation: pulse 2s infinite; 
+        }
 
         /* Formulário */
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; margin-bottom: 8px; color: var(--neon-purple); font-weight: bold; }
-        .input-group input { width: 100%; padding: 15px; background: #000; border: 1px solid var(--neon-purple); color: #fff; border-radius: 8px; outline: none; transition: 0.3s; }
-        .input-group input:focus { box-shadow: var(--neon-shadow); }
+        .input-group { 
+            margin-bottom: 20px; 
+        }
+        .input-group label { 
+            display: block; 
+            margin-bottom: 8px; 
+            color: var(--neon-purple); 
+            font-weight: bold; 
+        }
+        .input-group input { 
+            width: 100%; 
+            padding: 15px; 
+            background: #000; 
+            border: 1px solid var(--neon-purple); 
+            color: #fff; 
+            border-radius: 8px; 
+            outline: none; 
+            transition: 0.3s; 
+        }
+        .input-group input:focus { 
+            box-shadow: var(--neon-shadow); 
+        }
         
-        .btn-full { width: 100%; background: var(--neon-purple); color: #fff; border: none; padding: 15px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; box-shadow: var(--neon-shadow); transition: 0.3s; }
-        .btn-full:active { transform: scale(0.95); }
-        .btn-outline { background: transparent; border: 1px solid var(--neon-purple); color: var(--neon-purple); box-shadow: none; margin-top: 15px; }
+        .btn-full { 
+            width: 100%; 
+            background: var(--neon-purple); 
+            color: #fff; 
+            border: none; 
+            padding: 15px; 
+            border-radius: 8px; 
+            font-size: 1.1rem; 
+            font-weight: bold; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            margin-top: 10px; 
+            box-shadow: var(--neon-shadow); 
+            transition: 0.3s; 
+        }
+        .btn-full:active { 
+            transform: scale(0.95); 
+        }
+        .btn-outline { 
+            background: transparent; 
+            border: 1px solid var(--neon-purple); 
+            color: var(--neon-purple); 
+            box-shadow: none; 
+            margin-top: 15px; 
+        }
 
+        /* Admin */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .admin-card {
+            background: var(--surface-color);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--neon-purple);
+            box-shadow: 0 0 15px var(--neon-shadow);
+        }
+
+        .admin-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-purple);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8), 0 0 20px var(--neon-shadow);
+        }
+
+        .admin-card h3 {
+            color: var(--neon-purple);
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+        }
+
+        .admin-card p {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: #ccc;
+        }
+        .admin-card p strong { color: #fff; }
+
+        /* Login Admin */
+        .login-box {
+            max-width: 400px;
+            margin: 100px auto;
+            background: var(--surface-color);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid var(--neon-purple);
+            box-shadow: var(--neon-shadow);
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
+            background: #000;
+            border: 1px solid var(--neon-purple);
+            color: #fff;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        /* Chaveamento */
+        .bracket-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            justify-content: flex-start;
+            gap: 60px;
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 30px;
+            padding-top: 10px;
+        }
+
+        .round {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            gap: 30px;
+            min-width: 250px;
+        }
+
+        .round h3 {
+            text-align: center;
+            color: var(--neon-purple);
+            text-transform: uppercase;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--neon-shadow);
+        }
+
+        .matchup { 
+            display: flex; 
+            flex-direction: column; 
+            background: var(--surface-color); 
+            border-radius: 12px; 
+            border: 1px solid #222;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.8), 0 0 10px rgba(176, 38, 255, 0.05); 
+            position: relative;
+            transition: 0.3s;
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        .matchup:hover {
+            transform: translateY(-3px);
+            border-color: var(--neon-purple);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.9), 0 0 20px var(--neon-shadow);
+        }
+
+        .team { 
+            padding: 15px; 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            text-align: center; 
+            text-transform: uppercase;
+        }
+        .team:first-child { 
+            border-bottom: 1px solid #222; 
+        }
+
+        .vs {
+            position: absolute; 
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg-color); 
+            color: var(--neon-purple);
+            font-size: 0.8rem; 
+            font-weight: 900;
+            padding: 4px 8px; 
+            border-radius: 5px; 
+            border: 1px solid #222;
+        }
+        
+        .warning { 
+            color: var(--neon-purple); 
+            font-weight: bold; 
+            text-align: center; 
+            font-size: 1.2rem; 
+            margin-top: 20px; 
+        }
+
+        .btn { 
+            background: transparent; 
+            color: var(--neon-purple); 
+            border: 2px solid var(--neon-purple); 
+            padding: 12px 25px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px transparent;
+            margin-bottom: 20px;
+        }
+
+        .btn:hover { 
+            background: var(--neon-purple); 
+            color: #fff;
+            box-shadow: 0 0 20px var(--neon-shadow);
+            transform: scale(1.05);
+        }
+
+        .btn-danger {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        .btn-danger:hover {
+            background: var(--danger);
+            box-shadow: 0 0 20px rgba(255, 38, 38, 0.6);
+        }
+
+        @keyframes slideIn { 
+            from { opacity: 0; transform: translateX(-20px); } 
+            to { opacity: 1; transform: translateX(0); } 
+        }
+
+        ::-webkit-scrollbar { 
+            height: 10px; 
+            width: 10px; 
+        }
+        ::-webkit-scrollbar-track { 
+            background: var(--bg-color); 
+        }
+        ::-webkit-scrollbar-thumb { 
+            background: #333; 
+            border-radius: 10px; 
+        }
+        ::-webkit-scrollbar-thumb:hover { 
+            background: var(--neon-purple); 
+        }
     </style>
 </head>
 <body>
@@ -80,48 +494,78 @@
 
     <div id="app-container" class="app-container mobile-mode">
         
-        <!-- TELA 1: HOME -->
+        <!-- TELA HOME -->
         <div id="screen-home" class="screen active">
-            <header>
-                <h1>Copa 4x4 TROPINHA DO APZIN!</h1>
-                <p>Torneio Oficial Organizado Por Gh E Administração!</p>
-            </header>
+            <!-- Tabs principais -->
+            <div class="main-tabs" style="margin-bottom: 0;">
+                <button class="main-tab-btn active" onclick="switchMainTab('inscricao')">Inscrição</button>
+                <button class="main-tab-btn" onclick="switchMainTab('admin')">Admin</button>
+            </div>
 
-            <section class="reveal">
-                <h2>Como Funciona</h2>
-                <div class="box">
-                    <h3>1. Inscrição</h3>
-                    <p>Cadastre sua line preenchendo o formulário com os nicks exatos do jogo.</p>
-                </div>
-                <div class="box">
-                    <h3>2. Chaveamento</h3>
-                    <p>O sorteio é aleatório e define os confrontos do mata-mata (16 avos até a final).</p>
-                </div>
-                <div class="box">
-                    <h3>3. Disputa</h3>
-                    <p>Crie a sala no horário marcado. O time que vencer avança, o perdedor está fora!</p>
-                </div>
-            </section>
+            <!-- Conteúdo da Inscrição -->
+            <div id="content-inscricao" class="main-content active">
+                <header>
+                    <h1>Copa 4x4 TROPINHA DO APZIN!</h1>
+                    <p>Torneio Oficial Organizado Por Gh E Administração!</p>
+                </header>
 
-            <section class="reveal" style="margin-bottom: 100px;">
-                <h2>Regras</h2>
-                <div class="box">
-                    <ul>
-                        <li>Apenas Alok, Kelly, Moco, Maxim, Leon e Jota.</li>
-                        <li>Pets Somente Mestre Trigo, Patopinho e Panda!</li>
-						<li>Full Ump Xm8 Mp40</li>
-						<li>Desert e Mini-Uzi Válida Somente no Primeiro Round!</li>
-                        <li>Atraso máximo de 5 minutos para iniciar a sala. W.O automático após isso.</li>
-                        <li>Respeito é obrigatório no lobby e no grupo do WhatsApp.</li>
-                    </ul>
-                </div>
-            </section>
+                <section class="reveal">
+                    <h2>Como Funciona</h2>
+                    <div class="box">
+                        <h3>1. Inscrição</h3>
+                        <p>Cadastre sua line preenchendo o formulário com os nicks exatos do jogo.</p>
+                    </div>
+                    <div class="box">
+                        <h3>2. Chaveamento</h3>
+                        <p>O sorteio é aleatório e define os confrontos do mata-mata (16 avos até a final).</p>
+                    </div>
+                    <div class="box">
+                        <h3>3. Disputa</h3>
+                        <p>Crie a sala no horário marcado. O time que vencer avança, o perdedor está fora!</p>
+                    </div>
+                </section>
 
-            <!-- Este botão fica fixo no container quando rola para baixo -->
-            <button id="fab-btn" onclick="switchScreen('screen-form')">Inscreva-se</button>
+                <section class="reveal" style="margin-bottom: 100px;">
+                    <h2>Regras</h2>
+                    <div class="box">
+                        <ul>
+                            <li>Apenas Alok, Kelly, Moco, Maxim, Leon e Jota.</li>
+                            <li>Pets Somente Mestre Trigo, Patopinho e Panda!</li>
+                            <li>Full Ump Xm8 Mp40</li>
+                            <li>Desert e Mini-Uzi Válida Somente no Primeiro Round!</li>
+                            <li>Atraso máximo de 5 minutos para iniciar a sala. W.O automático após isso.</li>
+                            <li>Respeito é obrigatório no lobby e no grupo do WhatsApp.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <button id="fab-btn" onclick="switchScreen('screen-form')">Inscreva-se</button>
+            </div>
+
+            <!-- Conteúdo do Admin -->
+            <div id="content-admin" class="main-content" style="display: none;">
+                <div id="admin-login" class="login-box">
+                    <h2 style="font-size: 1.5rem;">Acesso Admin</h2>
+                    <input type="password" id="admin-pass" placeholder="Digite a senha" />
+                    <button class="btn-full" onclick="checkAdminPassword()">Entrar</button>
+                    <button class="btn-full btn-outline" onclick="switchMainTab('inscricao')">Voltar</button>
+                </div>
+
+                <div id="admin-panel" style="display: none;">
+                    <h2>Times Inscritos</h2>
+                    <button class="btn btn-danger" onclick="clearData()">Zerar Todas as Inscrições</button>
+                    <div class="admin-grid" id="adminGrid"></div>
+                    
+                    <h2 style="margin-top: 40px;">Gerador de Chaves</h2>
+                    <button class="btn" onclick="generateDynamicBracket()">Gerar / Sortear Chaves</button>
+                    <div class="bracket-wrapper" id="bracketContainer">
+                        <div class="warning">Clique no botão acima para sortear as chaves.</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- TELA 2: FORMULÁRIO -->
+        <!-- TELA FORMULÁRIO -->
         <div id="screen-form" class="screen">
             <h2 style="text-align: center; margin-top: 20px;">Sua Line</h2>
             <form id="regForm">
@@ -157,11 +601,13 @@
     </div>
 
     <script>
-        // Alternar visualização (PC / Mobile)
+        // ==== VARIÁVEIS GLOBAIS ====
         let isMobile = true;
         const appContainer = document.getElementById('app-container');
         const viewToggleBtn = document.getElementById('view-toggle');
+        let isAdminLogged = false;
 
+        // ==== FUNÇÕES DE VISUALIZAÇÃO ====
         function toggleDeviceView() {
             isMobile = !isMobile;
             if(isMobile) {
@@ -173,40 +619,76 @@
             }
         }
 
-        // Animação de Fade entre Telas
+        // ==== NAVEGAÇÃO ENTRE TELAS ====
         function switchScreen(targetId) {
             const current = document.querySelector('.screen.active');
             const target = document.getElementById(targetId);
             
-            // Fade Out
             current.style.opacity = '0';
             setTimeout(() => {
                 current.classList.remove('active');
                 current.style.display = 'none';
                 
-                // Fade In
                 target.style.display = 'block';
                 setTimeout(() => {
                     target.classList.add('active');
                     target.style.opacity = '1';
-                    appContainer.scrollTop = 0; // Volta pro topo
+                    appContainer.scrollTop = 0;
                 }, 50);
-            }, 400); // tempo do fade
+            }, 400);
         }
 
-        // Mostrar botão Flutuante ao rolar + Scroll Reveal
+        // ==== TABS PRINCIPAIS ====
+        function switchMainTab(tab) {
+            document.querySelectorAll('.main-tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.main-content').forEach(content => content.style.display = 'none');
+            
+            if(tab === 'inscricao') {
+                document.querySelectorAll('.main-tab-btn')[0].classList.add('active');
+                document.getElementById('content-inscricao').style.display = 'block';
+                appContainer.scrollTop = 0;
+            } else {
+                document.querySelectorAll('.main-tab-btn')[1].classList.add('active');
+                document.getElementById('content-admin').style.display = 'block';
+                appContainer.scrollTop = 0;
+                
+                if(isAdminLogged) {
+                    document.getElementById('admin-login').style.display = 'none';
+                    document.getElementById('admin-panel').style.display = 'block';
+                    loadAdminCards();
+                } else {
+                    document.getElementById('admin-login').style.display = 'block';
+                    document.getElementById('admin-panel').style.display = 'none';
+                }
+            }
+        }
+
+        // ==== LOGIN ADMIN ====
+        function checkAdminPassword() {
+            const password = document.getElementById('admin-pass').value;
+            if(password === 'ADM4X4') {
+                isAdminLogged = true;
+                document.getElementById('admin-login').style.display = 'none';
+                document.getElementById('admin-panel').style.display = 'block';
+                loadAdminCards();
+                document.getElementById('admin-pass').value = '';
+            } else {
+                alert('Senha incorreta!');
+                document.getElementById('admin-pass').value = '';
+            }
+        }
+
+        // ==== SCROLL REVEAL + FAB ====
         const fabBtn = document.getElementById('fab-btn');
         const reveals = document.querySelectorAll('.reveal');
 
         appContainer.addEventListener('scroll', () => {
-            // Lógica do botão flutuante
             if (appContainer.scrollTop > 150) {
                 fabBtn.classList.add('show');
             } else {
                 fabBtn.classList.remove('show');
             }
 
-            // Lógica do Scroll Reveal (Animação de revelar itens)
             reveals.forEach(el => {
                 const elementTop = el.getBoundingClientRect().top;
                 const containerHeight = appContainer.clientHeight;
@@ -216,10 +698,9 @@
             });
         });
 
-        // Disparar evento de scroll inicial para garantir que elementos no topo apareçam
         appContainer.dispatchEvent(new Event('scroll'));
 
-        // Salvar Formulário
+        // ==== SALVAR FORMULÁRIO ====
         document.getElementById('regForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -233,14 +714,144 @@
                 p4: document.getElementById('p4').value
             };
 
-            let teams = JSON.parse(localStorage.getItem('ff_teams_neon')) || [];
+            let teams = JSON.parse(localStorage.getItem('ff_teams')) || [];
             teams.push(data);
-            localStorage.setItem('ff_teams_neon', JSON.stringify(teams));
+            localStorage.setItem('ff_teams', JSON.stringify(teams));
 
             alert('Time inscrito com sucesso no campeonato!');
             this.reset();
             switchScreen('screen-home');
         });
+
+        // ==== CARREGAR CARDS ADMIN ====
+        function loadAdminCards() {
+            const grid = document.getElementById('adminGrid');
+            const teams = JSON.parse(localStorage.getItem('ff_teams')) || [];
+            
+            grid.innerHTML = '';
+
+            if (teams.length === 0) {
+                grid.innerHTML = '<div class="warning" style="grid-column: 1 / -1;">Nenhum time inscrito ainda.</div>';
+                return;
+            }
+
+            teams.forEach(team => {
+                const card = document.createElement('div');
+                card.className = 'admin-card';
+                card.innerHTML = `
+                    <h3>${team.name}</h3>
+                    <p><strong>WhatsApp:</strong> ${team.phone}</p>
+                    <p><strong>P1 (Capitão):</strong> ${team.p1}</p>
+                    <p><strong>P2:</strong> ${team.p2}</p>
+                    <p><strong>P3:</strong> ${team.p3}</p>
+                    <p><strong>P4:</strong> ${team.p4}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ==== LIMPAR DADOS ====
+        function clearData() {
+            if (confirm("ATENÇÃO: Deseja apagar permanentemente todas as inscrições?")) {
+                localStorage.removeItem('ff_teams');
+                loadAdminCards();
+                document.getElementById('bracketContainer').innerHTML = '<div class="warning">Chaveamento resetado. Inscreva novos times.</div>';
+            }
+        }
+
+        // ==== SORTEAR TIMES ====
+        function shuffleArray(array) {
+            let shuffled = array.slice();
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        // ==== GERAR CHAVEAMENTO ====
+        function generateDynamicBracket() {
+            const container = document.getElementById('bracketContainer');
+            let registeredTeams = JSON.parse(localStorage.getItem('ff_teams')) || [];
+            
+            container.innerHTML = '';
+
+            if (registeredTeams.length < 2) {
+                container.innerHTML = '<div class="warning">Mínimo de 2 times necessários para gerar o chaveamento!</div>';
+                return;
+            }
+
+            let powerOf2 = 2;
+            while (powerOf2 < registeredTeams.length) {
+                powerOf2 *= 2;
+            }
+
+            let teams = shuffleArray(registeredTeams);
+
+            while (teams.length < powerOf2) {
+                teams.push({ name: 'W.O (BYE)' });
+            }
+
+            let roundsData = [];
+            let currentRoundTeams = teams;
+
+            while (currentRoundTeams.length >= 2) {
+                let matches = [];
+                let nextRoundPlaceholders = [];
+
+                for (let i = 0; i < currentRoundTeams.length; i += 2) {
+                    matches.push({
+                        t1: currentRoundTeams[i].name,
+                        t2: currentRoundTeams[i+1].name
+                    });
+                    nextRoundPlaceholders.push({ name: 'Vencedor' });
+                }
+                roundsData.push(matches);
+                currentRoundTeams = nextRoundPlaceholders;
+            }
+
+            const totalRounds = roundsData.length;
+            const roundNames = [];
+            
+            for (let i = 0; i < totalRounds; i++) {
+                let matchCount = roundsData[i].length;
+                if (matchCount === 1) roundNames.push("Grande Final");
+                else if (matchCount === 2) roundNames.push("Semifinal");
+                else if (matchCount === 4) roundNames.push("Quartas de Final");
+                else if (matchCount === 8) roundNames.push("Oitavas de Final");
+                else if (matchCount === 16) roundNames.push("16 Avos");
+                else roundNames.push(`Rodada de ${matchCount * 2}`);
+            }
+
+            roundsData.forEach((round, roundIndex) => {
+                const roundDiv = document.createElement('div');
+                roundDiv.className = 'round';
+                
+                const title = document.createElement('h3');
+                title.innerText = roundNames[roundIndex];
+                roundDiv.appendChild(title);
+
+                round.forEach((match, matchIndex) => {
+                    const matchDiv = document.createElement('div');
+                    matchDiv.className = 'matchup';
+                    matchDiv.style.animationDelay = `${(roundIndex * 0.15) + (matchIndex * 0.05)}s`;
+
+                    let t1Style = (match.t1.includes('W.O') || match.t1 === 'Vencedor') ? 'color:#666; font-weight:normal;' : 'color:#fff;';
+                    let t2Style = (match.t2.includes('W.O') || match.t2 === 'Vencedor') ? 'color:#666; font-weight:normal;' : 'color:#fff;';
+
+                    matchDiv.innerHTML = `
+                        <div class="team" style="${t1Style}">${match.t1}</div>
+                        <div class="vs">VS</div>
+                        <div class="team" style="${t2Style}">${match.t2}</div>
+                    `;
+                    roundDiv.appendChild(matchDiv);
+                });
+                container.appendChild(roundDiv);
+            });
+        }
+
+        // ==== INICIALIZAÇÃO ====
+        loadAdminCards();
     </script>
 </body>
 </html>
