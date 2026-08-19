@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscrição - Copa 4x4 FF</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --surface-color: #111;
+            --neon-purple: #b026ff;
+            --text-main: #fff;
+            --text-muted: #aaa;
+            --neon-shadow: 0 0 5px var(--neon-purple), 0 0 20px var(--neon-purple);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body { background-color: #000; color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+
+        /* Emulador Mobile/PC */
+        #view-toggle { position: absolute; top: 20px; right: 20px; z-index: 9999; background: var(--surface-color); color: var(--neon-purple); border: 1px solid var(--neon-purple); box-shadow: var(--neon-shadow); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; }
+        #view-toggle:hover { background: var(--neon-purple); color: #fff; }
+        #view-toggle:active { transform: scale(0.9); }
+
+        .app-container { background-color: var(--bg-color); position: relative; overflow-x: hidden; overflow-y: auto; transition: all 0.5s ease-in-out; scroll-behavior: smooth; }
+        
+        /* Modos */
+        .mobile-mode { width: 375px; height: 812px; border-radius: 40px; border: 8px solid #222; box-shadow: 0 0 50px rgba(176, 38, 255, 0.2); }
+        .pc-mode { width: 100vw; height: 100vh; border-radius: 0; border: none; }
+        .mobile-mode::-webkit-scrollbar { display: none; } /* Oculta scrollbar no mobile */
+
+        /* Telas (Fade) */
+        .screen { width: 100%; min-height: 100%; position: absolute; top: 0; left: 0; padding: 20px; transition: opacity 0.4s ease; display: none; opacity: 0; }
+        .screen.active { display: block; opacity: 1; position: relative; }
+
+        /* Header / Hero */
+        header { text-align: center; padding: 60px 20px; border-bottom: 1px solid rgba(176,38,255,0.3); }
+        header h1 { font-size: 2.5rem; color: var(--text-main); text-shadow: var(--neon-shadow); text-transform: uppercase; margin-bottom: 15px; }
+        header p { color: var(--text-muted); font-size: 1.1rem; }
+
+        /* Seções de Conteúdo */
+        section { padding: 40px 20px; border-bottom: 1px solid rgba(176,38,255,0.1); }
+        h2 { color: var(--neon-purple); margin-bottom: 20px; font-size: 1.8rem; text-shadow: 0 0 10px rgba(176,38,255,0.5); text-transform: uppercase; }
+        
+        .box { background: var(--surface-color); padding: 20px; border-radius: 12px; border: 1px solid rgba(176,38,255,0.3); margin-bottom: 15px; }
+        .box h3 { margin-bottom: 10px; color: #fff; }
+        .box p, .box li { color: var(--text-muted); line-height: 1.6; margin-bottom: 8px; }
+        ul { padding-left: 20px; }
+
+        /* Animações de Rolagem */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.6s ease-out; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* Botão Flutuante (Inscrição) */
+        #fab-btn { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) scale(0.8); background: #000; color: var(--neon-purple); border: 2px solid var(--neon-purple); box-shadow: var(--neon-shadow); padding: 15px 40px; border-radius: 30px; font-size: 1.2rem; font-weight: bold; text-transform: uppercase; cursor: pointer; opacity: 0; pointer-events: none; transition: all 0.4s ease; z-index: 1000; }
+        #fab-btn.show { opacity: 1; transform: translateX(-50%) scale(1); pointer-events: auto; }
+        #fab-btn:hover { background: var(--neon-purple); color: #fff; box-shadow: 0 0 30px var(--neon-purple); }
+        #fab-btn:active { transform: translateX(-50%) scale(0.9); }
+
+        /* Animação Pulso do botão */
+        @keyframes pulse { 0% { box-shadow: 0 0 5px var(--neon-purple); } 50% { box-shadow: 0 0 25px var(--neon-purple); } 100% { box-shadow: 0 0 5px var(--neon-purple); } }
+        #fab-btn.show { animation: pulse 2s infinite; }
+
+        /* Formulário */
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; color: var(--neon-purple); font-weight: bold; }
+        .input-group input { width: 100%; padding: 15px; background: #000; border: 1px solid var(--neon-purple); color: #fff; border-radius: 8px; outline: none; transition: 0.3s; }
+        .input-group input:focus { box-shadow: var(--neon-shadow); }
+        
+        .btn-full { width: 100%; background: var(--neon-purple); color: #fff; border: none; padding: 15px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; box-shadow: var(--neon-shadow); transition: 0.3s; }
+        .btn-full:active { transform: scale(0.95); }
+        .btn-outline { background: transparent; border: 1px solid var(--neon-purple); color: var(--neon-purple); box-shadow: none; margin-top: 15px; }
+
+    </style>
+</head>
+<body>
+
+    <button id="view-toggle" onclick="toggleDeviceView()">PC View</button>
+
+    <div id="app-container" class="app-container mobile-mode">
+        
+        <!-- TELA 1: HOME -->
+        <div id="screen-home" class="screen active">
+            <header>
+                <h1>Copa 4x4 TROPINHA DO APZIN!</h1>
+                <p>Torneio Oficial Organizado Por Gh E Administração!</p>
+            </header>
+
+            <section class="reveal">
+                <h2>Como Funciona</h2>
+                <div class="box">
+                    <h3>1. Inscrição</h3>
+                    <p>Cadastre sua line preenchendo o formulário com os nicks exatos do jogo.</p>
+                </div>
+                <div class="box">
+                    <h3>2. Chaveamento</h3>
+                    <p>O sorteio é aleatório e define os confrontos do mata-mata (16 avos até a final).</p>
+                </div>
+                <div class="box">
+                    <h3>3. Disputa</h3>
+                    <p>Crie a sala no horário marcado. O time que vencer avança, o perdedor está fora!</p>
+                </div>
+            </section>
+
+            <section class="reveal" style="margin-bottom: 100px;">
+                <h2>Regras</h2>
+                <div class="box">
+                    <ul>
+                        <li>Apenas Alok, Kelly, Moco, Maxim, Leon e Jota.</li>
+                        <li>Pets Somente Mestre Trigo, Patopinho e Panda!</li>
+						<li>Full Ump Xm8 Mp40</li>
+						<li>Desert e Mini-Uzi Válida Somente no Primeiro Round!</li>
+                        <li>Atraso máximo de 5 minutos para iniciar a sala. W.O automático após isso.</li>
+                        <li>Respeito é obrigatório no lobby e no grupo do WhatsApp.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Este botão fica fixo no container quando rola para baixo -->
+            <button id="fab-btn" onclick="switchScreen('screen-form')">Inscreva-se</button>
+        </div>
+
+        <!-- TELA 2: FORMULÁRIO -->
+        <div id="screen-form" class="screen">
+            <h2 style="text-align: center; margin-top: 20px;">Sua Line</h2>
+            <form id="regForm">
+                <div class="input-group">
+                    <label>Nome do Time</label>
+                    <input type="text" id="tName" required placeholder="LOUD, Fluxo, etc...">
+                </div>
+                <div class="input-group">
+                    <label>WhatsApp do Capitão</label>
+                    <input type="tel" id="tPhone" required placeholder="(11) 99999-9999">
+                </div>
+                <div class="input-group">
+                    <label>Capitão (P1)</label>
+                    <input type="text" id="p1" required placeholder="Nick in-game">
+                </div>
+                <div class="input-group">
+                    <label>Jogador 2 (P2)</label>
+                    <input type="text" id="p2" required placeholder="Nick in-game">
+                </div>
+                <div class="input-group">
+                    <label>Jogador 3 (P3)</label>
+                    <input type="text" id="p3" required placeholder="Nick in-game">
+                </div>
+                <div class="input-group">
+                    <label>Jogador 4 (P4)</label>
+                    <input type="text" id="p4" required placeholder="Nick in-game">
+                </div>
+                <button type="submit" class="btn-full">Confirmar Inscrição</button>
+                <button type="button" class="btn-full btn-outline" onclick="switchScreen('screen-home')">Voltar</button>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        // Alternar visualização (PC / Mobile)
+        let isMobile = true;
+        const appContainer = document.getElementById('app-container');
+        const viewToggleBtn = document.getElementById('view-toggle');
+
+        function toggleDeviceView() {
+            isMobile = !isMobile;
+            if(isMobile) {
+                appContainer.className = 'app-container mobile-mode';
+                viewToggleBtn.innerText = 'PC View';
+            } else {
+                appContainer.className = 'app-container pc-mode';
+                viewToggleBtn.innerText = 'Mobile View';
+            }
+        }
+
+        // Animação de Fade entre Telas
+        function switchScreen(targetId) {
+            const current = document.querySelector('.screen.active');
+            const target = document.getElementById(targetId);
+            
+            // Fade Out
+            current.style.opacity = '0';
+            setTimeout(() => {
+                current.classList.remove('active');
+                current.style.display = 'none';
+                
+                // Fade In
+                target.style.display = 'block';
+                setTimeout(() => {
+                    target.classList.add('active');
+                    target.style.opacity = '1';
+                    appContainer.scrollTop = 0; // Volta pro topo
+                }, 50);
+            }, 400); // tempo do fade
+        }
+
+        // Mostrar botão Flutuante ao rolar + Scroll Reveal
+        const fabBtn = document.getElementById('fab-btn');
+        const reveals = document.querySelectorAll('.reveal');
+
+        appContainer.addEventListener('scroll', () => {
+            // Lógica do botão flutuante
+            if (appContainer.scrollTop > 150) {
+                fabBtn.classList.add('show');
+            } else {
+                fabBtn.classList.remove('show');
+            }
+
+            // Lógica do Scroll Reveal (Animação de revelar itens)
+            reveals.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                const containerHeight = appContainer.clientHeight;
+                if(elementTop < containerHeight - 50) {
+                    el.classList.add('visible');
+                }
+            });
+        });
+
+        // Disparar evento de scroll inicial para garantir que elementos no topo apareçam
+        appContainer.dispatchEvent(new Event('scroll'));
+
+        // Salvar Formulário
+        document.getElementById('regForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const data = {
+                id: Date.now(),
+                name: document.getElementById('tName').value,
+                phone: document.getElementById('tPhone').value,
+                p1: document.getElementById('p1').value,
+                p2: document.getElementById('p2').value,
+                p3: document.getElementById('p3').value,
+                p4: document.getElementById('p4').value
+            };
+
+            let teams = JSON.parse(localStorage.getItem('ff_teams_neon')) || [];
+            teams.push(data);
+            localStorage.setItem('ff_teams_neon', JSON.stringify(teams));
+
+            alert('Time inscrito com sucesso no campeonato!');
+            this.reset();
+            switchScreen('screen-home');
+        });
+    </script>
+</body>
+</html>
