@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chaveamento Dinâmico 4x4</title>
+    <title>Painel Admin & Chaveamento - 4x4</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 
@@ -13,6 +13,7 @@
             --bg: #050505; 
             --surface: #111111; 
             --text: #ffffff; 
+            --danger: #ff2626;
         }
 
         * { 
@@ -29,37 +30,77 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            padding: 40px 20px;
-            overflow-x: auto;
+            padding: 20px;
+            overflow-x: hidden;
         }
         
-        h1 { 
+        h1, h2 { 
             color: var(--text); 
-            margin-bottom: 40px; 
             text-transform: uppercase; 
             text-align: center; 
             font-weight: 900;
             text-shadow: 0 0 15px var(--primary-glow);
-        }
-        
-        .controls { 
-            margin-bottom: 40px; 
-            display: flex;
-            gap: 15px;
+            margin-bottom: 20px;
         }
 
+        /* --- SISTEMA DE ABAS --- */
+        .tabs-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: var(--surface);
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid #222;
+            box-shadow: 0 0 15px rgba(176, 38, 255, 0.2);
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: var(--text);
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+            color: #fff;
+        }
+
+        .tab-content {
+            display: none;
+            width: 100%;
+            max-width: 1400px;
+            animation: fadeIn 0.5s ease forwards;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        /* --- BOTÕES GERAIS --- */
         .btn { 
             background: transparent; 
             color: var(--primary); 
             border: 2px solid var(--primary); 
-            padding: 15px 30px; 
+            padding: 12px 25px; 
             border-radius: 8px; 
             font-weight: bold; 
             cursor: pointer; 
-            font-size: 1.1rem; 
+            font-size: 1rem; 
             text-transform: uppercase;
             transition: all 0.3s ease;
             box-shadow: 0 0 10px transparent;
+            margin-bottom: 20px;
         }
 
         .btn:hover { 
@@ -68,22 +109,76 @@
             box-shadow: 0 0 20px var(--primary-glow);
             transform: scale(1.05);
         }
-        
-        /* Container Principal do Chaveamento */
+
+        .btn-danger {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        .btn-danger:hover {
+            background: var(--danger);
+            box-shadow: 0 0 20px rgba(255, 38, 38, 0.6);
+        }
+
+        /* --- ADMIN: CAIXINHAS NEON --- */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .admin-card {
+            background: var(--surface);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .admin-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8), 0 0 20px var(--primary-glow);
+        }
+
+        .admin-card h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+        }
+
+        .admin-card p {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: #ccc;
+        }
+        .admin-card p strong { color: #fff; }
+
+        /* --- CHAVEAMENTO --- */
         .bracket-wrapper {
             display: flex;
             flex-direction: row;
             align-items: stretch;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 60px;
             width: 100%;
-            max-width: 1400px;
             overflow-x: auto;
             padding-bottom: 30px;
-            animation: fadeIn 1s ease forwards;
+            padding-top: 10px;
         }
 
-        /* Cada Coluna (Rodada) */
         .round {
             display: flex;
             flex-direction: column;
@@ -101,103 +196,141 @@
             text-shadow: 0 0 10px var(--primary-glow);
         }
 
-        /* Cartão de Confronto */
         .matchup { 
             display: flex; 
             flex-direction: column; 
             background: var(--surface); 
             border-radius: 12px; 
             border: 1px solid #222;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.8), 0 0 15px rgba(176, 38, 255, 0.1); 
-            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.8), 0 0 10px rgba(176, 38, 255, 0.05); 
             position: relative;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: 0.3s;
             animation: slideIn 0.5s ease forwards;
-            opacity: 0;
         }
 
         .matchup:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
             border-color: var(--primary);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.9), 0 0 25px var(--primary-glow);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.9), 0 0 20px var(--primary-glow);
         }
 
-        /* Efeito visual nas chaves (Conectores virtuais) */
         .round:not(:last-child) .matchup::after {
-            content: '';
-            position: absolute;
-            right: -30px;
-            top: 50%;
-            width: 30px;
-            height: 2px;
-            background: #333;
-            z-index: -1;
+            content: ''; position: absolute; right: -30px; top: 50%;
+            width: 30px; height: 2px; background: #333; z-index: -1;
         }
 
         .team { 
-            padding: 15px; 
-            font-size: 1.1rem; 
-            font-weight: 700; 
-            text-align: center;
-            text-transform: uppercase;
+            padding: 15px; font-size: 1.1rem; font-weight: 700; 
+            text-align: center; text-transform: uppercase;
         }
-
         .team:first-child { border-bottom: 1px solid #222; }
 
         .vs {
-            position: absolute;
-            top: 50%;
-            left: 50%;
+            position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            background: var(--bg);
-            color: var(--primary);
-            font-size: 0.9rem;
-            font-weight: 900;
-            padding: 5px 10px;
-            border-radius: 5px;
-            border: 1px solid #222;
+            background: var(--bg); color: var(--primary);
+            font-size: 0.8rem; font-weight: 900;
+            padding: 4px 8px; border-radius: 5px; border: 1px solid #222;
         }
         
         .warning { 
-            color: var(--primary); 
-            font-weight: bold; 
-            text-align: center; 
-            font-size: 1.2rem;
-            margin-top: 20px; 
-            text-shadow: 0 0 10px var(--primary-glow);
+            color: var(--primary); font-weight: bold; 
+            text-align: center; font-size: 1.2rem; margin-top: 20px; 
         }
 
-        /* Animações */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* Scrollbar customizada para o overflow */
-        ::-webkit-scrollbar { height: 10px; }
+        /* --- ANIMAÇÕES E SCROLLBAR --- */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        
+        ::-webkit-scrollbar { height: 10px; width: 10px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
     </style>
 </head>
 <body>
 
-    <h1>Chaveamento Oficial</h1>
-    
-    <div class="controls">
-        <button class="btn" onclick="generateDynamicBracket()">Gerar Chaveamento</button>
+    <h1>Painel de Controle 4x4</h1>
+
+    <!-- ABAS DE NAVEGAÇÃO -->
+    <div class="tabs-container">
+        <button class="tab-btn active" onclick="switchTab('admin')">Admin (Inscritos)</button>
+        <button class="tab-btn" onclick="switchTab('bracket')">Chaveamento</button>
     </div>
 
-    <div class="bracket-wrapper" id="bracketContainer">
-        <div class="warning">Clique em "Gerar Chaveamento" para sortear as chaves baseadas nos inscritos.</div>
+    <!-- CONTEÚDO DA ABA ADMIN -->
+    <div id="tab-admin" class="tab-content active">
+        <h2>Times Inscritos</h2>
+        <button class="btn btn-danger" onclick="clearData()">Zerar Todas as Inscrições</button>
+        <div class="admin-grid" id="adminGrid">
+            <!-- Caixinhas injetadas pelo JS -->
+        </div>
+    </div>
+
+    <!-- CONTEÚDO DA ABA CHAVEAMENTO -->
+    <div id="tab-bracket" class="tab-content">
+        <h2>Gerador de Chaves</h2>
+        <button class="btn" onclick="generateDynamicBracket()">Gerar / Sortear Chaves</button>
+        <div class="bracket-wrapper" id="bracketContainer">
+            <div class="warning">Clique no botão acima para sortear as chaves.</div>
+        </div>
     </div>
 
     <script>
-        // Função para embaralhar os times
+        // Lógica de Troca de Abas
+        function switchTab(tabName) {
+            // Remove classe 'active' de todos os botões e conteúdos
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Adiciona classe 'active' na aba selecionada
+            if(tabName === 'admin') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('tab-admin').classList.add('active');
+                loadAdminCards(); // Recarrega os cards ao abrir a aba
+            } else {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('tab-bracket').classList.add('active');
+            }
+        }
+
+        // --- LÓGICA DO ADMIN (CAIXINHAS) ---
+        function loadAdminCards() {
+            const grid = document.getElementById('adminGrid');
+            const teams = JSON.parse(localStorage.getItem('ff_teams')) || [];
+            
+            grid.innerHTML = '';
+
+            if (teams.length === 0) {
+                grid.innerHTML = '<div class="warning" style="grid-column: 1 / -1;">Nenhum time inscrito ainda.</div>';
+                return;
+            }
+
+            teams.forEach(team => {
+                const card = document.createElement('div');
+                card.className = 'admin-card';
+                card.innerHTML = `
+                    <h3>${team.name}</h3>
+                    <p><strong>WhatsApp:</strong> ${team.phone}</p>
+                    <p><strong>P1 (Rep):</strong> ${team.p1}</p>
+                    <p><strong>P2:</strong> ${team.p2}</p>
+                    <p><strong>P3:</strong> ${team.p3}</p>
+                    <p><strong>P4:</strong> ${team.p4}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function clearData() {
+            if (confirm("ATENÇÃO: Deseja apagar permanentemente todas as inscrições?")) {
+                localStorage.removeItem('ff_teams');
+                loadAdminCards();
+                document.getElementById('bracketContainer').innerHTML = '<div class="warning">Chaveamento resetado. Inscreva novos times.</div>';
+            }
+        }
+
+        // --- LÓGICA DO CHAVEAMENTO ---
         function shuffleArray(array) {
             let shuffled = array.slice();
             for (let i = shuffled.length - 1; i > 0; i--) {
@@ -214,29 +347,27 @@
             container.innerHTML = '';
 
             if (registeredTeams.length < 2) {
-                container.innerHTML = '<div class="warning">Inscreva pelo menos 2 times para gerar o chaveamento!</div>';
+                container.innerHTML = '<div class="warning">Mínimo de 2 times necessários para gerar o chaveamento!</div>';
                 return;
             }
 
-            // Descobre qual é a potência de 2 mais próxima (2, 4, 8, 16, 32...)
+            // Acha a potência de 2 mais próxima (2, 4, 8, 16, 32...)
             let powerOf2 = 2;
             while (powerOf2 < registeredTeams.length) {
                 powerOf2 *= 2;
             }
 
-            // Embaralha os times inscritos
             let teams = shuffleArray(registeredTeams);
 
-            // Preenche com 'W.O' (Aguardando) caso não seja uma potência exata de 2 (ex: tem 6 times, preenche 2 com W.O para formar 8)
+            // Preenche buracos com W.O
             while (teams.length < powerOf2) {
-                teams.push({ name: 'W.O' });
+                teams.push({ name: 'W.O (BYE)' });
             }
 
-            // Variável para armazenar a estrutura de cada rodada
             let roundsData = [];
             let currentRoundTeams = teams;
 
-            // Simula a progressão das chaves até a final
+            // Cria a árvore mata-mata
             while (currentRoundTeams.length >= 2) {
                 let matches = [];
                 let nextRoundPlaceholders = [];
@@ -246,18 +377,16 @@
                         t1: currentRoundTeams[i].name,
                         t2: currentRoundTeams[i+1].name
                     });
-                    // O vencedor avança para a próxima rodada (Usamos "Vencedor" como placeholder visual nas próximas colunas)
                     nextRoundPlaceholders.push({ name: 'Vencedor' });
                 }
-
                 roundsData.push(matches);
                 currentRoundTeams = nextRoundPlaceholders;
             }
 
-            // Define os nomes corretos para as rodadas geradas
             const totalRounds = roundsData.length;
             const roundNames = [];
             
+            // Define nomes das fases baseado no tamanho
             for (let i = 0; i < totalRounds; i++) {
                 let matchCount = roundsData[i].length;
                 if (matchCount === 1) roundNames.push("Grande Final");
@@ -268,7 +397,7 @@
                 else roundNames.push(`Rodada de ${matchCount * 2}`);
             }
 
-            // Renderiza o HTML dinamicamente
+            // Injeta na tela
             roundsData.forEach((round, roundIndex) => {
                 const roundDiv = document.createElement('div');
                 roundDiv.className = 'round';
@@ -280,21 +409,24 @@
                 round.forEach((match, matchIndex) => {
                     const matchDiv = document.createElement('div');
                     matchDiv.className = 'matchup';
-                    
-                    // Adiciona delay na animação para efeito cascata
-                    matchDiv.style.animationDelay = `${(roundIndex * 0.2) + (matchIndex * 0.1)}s`;
+                    matchDiv.style.animationDelay = `${(roundIndex * 0.15) + (matchIndex * 0.05)}s`;
+
+                    let t1Style = (match.t1.includes('W.O') || match.t1 === 'Vencedor') ? 'color:#666; font-weight:normal;' : 'color:#fff;';
+                    let t2Style = (match.t2.includes('W.O') || match.t2 === 'Vencedor') ? 'color:#666; font-weight:normal;' : 'color:#fff;';
 
                     matchDiv.innerHTML = `
-                        <div class="team" style="color: ${match.t1 === 'W.O' || match.t1 === 'Vencedor' ? '#555' : '#fff'}">${match.t1}</div>
+                        <div class="team" style="${t1Style}">${match.t1}</div>
                         <div class="vs">VS</div>
-                        <div class="team" style="color: ${match.t2 === 'W.O' || match.t2 === 'Vencedor' ? '#555' : '#fff'}">${match.t2}</div>
+                        <div class="team" style="${t2Style}">${match.t2}</div>
                     `;
                     roundDiv.appendChild(matchDiv);
                 });
-
                 container.appendChild(roundDiv);
             });
         }
+
+        // Carrega o admin inicial caso haja dados no localStorage
+        loadAdminCards();
     </script>
 </body>
 </html>
