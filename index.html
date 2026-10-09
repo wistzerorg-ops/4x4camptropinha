@@ -3,855 +3,505 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copa 4x4 FF - Sistema Completo</title>
+    <title>Gh & Drei - Web Design & Dev System</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
-
         :root {
-            --bg-color: #050505;
-            --surface-color: #111;
-            --neon-purple: #b026ff;
-            --text-main: #fff;
-            --text-muted: #aaa;
-            --neon-shadow: 0 0 5px var(--neon-purple), 0 0 20px var(--neon-purple);
-            --danger: #ff2626;
+            --azul-escuro: #0a192f;
+            --azul-medio: #1a365d;
+            --azul-claro: #5D99C6;
+            --texto-claro: #f8fafc;
+            --texto-escuro: #334155;
+            --fundo-site: #f1f5f9;
+            --cor-whatsapp: #25D366;
+            --hover-whatsapp: #1da851;
         }
 
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-        }
-        
-        body { 
-            background-color: #000; 
-            color: var(--text-main); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            overflow: hidden; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
         }
 
-        /* Botões de controle de visualização */
-        #view-toggle { 
-            position: fixed; 
-            top: 20px; 
-            right: 20px; 
-            z-index: 9999; 
-            background: var(--surface-color); 
-            color: var(--neon-purple); 
-            border: 1px solid var(--neon-purple); 
-            box-shadow: var(--neon-shadow); 
-            padding: 10px 20px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            text-transform: uppercase; 
-            transition: 0.3s; 
-        }
-        #view-toggle:hover { 
-            background: var(--neon-purple); 
-            color: #fff; 
+        html {
+            scroll-behavior: smooth;
         }
 
-        .app-container { 
-            background-color: var(--bg-color); 
-            position: relative; 
-            overflow-x: hidden; 
-            overflow-y: auto; 
-            transition: all 0.5s ease-in-out; 
-            scroll-behavior: smooth; 
-        }
-        
-        .mobile-mode { 
-            width: 375px; 
-            height: 812px; 
-            border-radius: 40px; 
-            border: 8px solid #222; 
-            box-shadow: 0 0 50px rgba(176, 38, 255, 0.2); 
-        }
-        .pc-mode { 
-            width: 100vw; 
-            height: 100vh; 
-            border-radius: 0; 
-            border: none; 
-        }
-        .mobile-mode::-webkit-scrollbar { 
-            display: none; 
+        body {
+            background-color: var(--fundo-site);
+            color: var(--texto-escuro);
+            line-height: 1.6;
+            position: relative;
+            min-height: 100vh;
         }
 
-        /* Telas */
-        .screen { 
-            width: 100%; 
-            min-height: 100%; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            padding: 20px; 
-            transition: opacity 0.4s ease; 
-            display: none; 
-            opacity: 0; 
-        }
-        .screen.active { 
-            display: block; 
-            opacity: 1; 
-            position: relative; 
+        /* Marca D'água */
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vw;
+            height: 60vw;
+            background-image: url('Gh e D (1).png'); /* Lembre-se de renomear para logo.png se der erro */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.03;
+            z-index: -1;
+            pointer-events: none;
         }
 
-        /* Tabs de navegação */
-        .main-tabs {
+        /* Cabeçalho */
+        header {
+            background-color: var(--azul-escuro);
+            color: var(--texto-claro);
+            padding: 1rem 5%;
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            background: var(--surface-color);
-            padding: 10px;
-            border-radius: 12px;
-            border: 1px solid #222;
-            box-shadow: 0 0 15px rgba(176, 38, 255, 0.2);
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .main-tab-btn {
-            background: transparent;
-            color: var(--text-main);
-            border: none;
-            padding: 10px 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
+        /* CORREÇÃO DA LOGO AQUI */
+        .logo-header {
+            height: 60px;
+            width: auto;
+            /* Fundo branco para a logo escura aparecer */
+            background-color: #ffffff;
+            padding: 5px 10px;
             border-radius: 8px;
-            transition: 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            color: var(--texto-claro);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--azul-claro);
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        section {
+            padding: 5rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            color: var(--azul-escuro);
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: var(--azul-claro);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6rem 5% 4rem;
+            background: linear-gradient(135deg, var(--azul-escuro) 0%, var(--azul-medio) 100%);
+            color: var(--texto-claro);
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-text {
+            flex: 1;
+            padding-right: 2rem;
+        }
+
+        .hero-text h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-text h1 span {
+            color: var(--azul-claro);
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #cbd5e1;
+        }
+
+        .btn-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--cor-whatsapp);
+            color: white;
+            padding: 15px 35px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 800;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-cta:hover {
+            background-color: var(--hover-whatsapp);
+            transform: translateY(-3px);
+        }
+
+        .sobre-content {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .sobre-texto {
             flex: 1;
         }
 
-        .main-tab-btn.active {
-            background: var(--neon-purple);
-            box-shadow: 0 0 15px var(--neon-shadow);
-            color: #fff;
+        .sobre-texto h3 {
+            color: var(--azul-medio);
+            font-size: 2rem;
+            margin-bottom: 1rem;
         }
 
-        /* Header */
-        header { 
-            text-align: center; 
-            padding: 60px 20px; 
-            border-bottom: 1px solid rgba(176,38,255,0.3); 
-        }
-        header h1 { 
-            font-size: 2.5rem; 
-            color: var(--text-main); 
-            text-shadow: var(--neon-shadow); 
-            text-transform: uppercase; 
-            margin-bottom: 15px; 
-        }
-        header p { 
-            color: var(--text-muted); 
-            font-size: 1.1rem; 
+        .sobre-texto p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: #475569;
         }
 
-        /* Seções */
-        section { 
-            padding: 40px 20px; 
-            border-bottom: 1px solid rgba(176,38,255,0.1); 
-        }
-        h2 { 
-            color: var(--neon-purple); 
-            margin-bottom: 20px; 
-            font-size: 1.8rem; 
-            text-shadow: 0 0 10px rgba(176,38,255,0.5); 
-            text-transform: uppercase; 
+        .sobre-imagem {
+            flex: 1;
             text-align: center;
         }
-        
-        .box { 
-            background: var(--surface-color); 
-            padding: 20px; 
-            border-radius: 12px; 
-            border: 1px solid rgba(176,38,255,0.3); 
-            margin-bottom: 15px; 
-        }
-        .box h3 { 
-            margin-bottom: 10px; 
-            color: #fff; 
-        }
-        .box p, .box li { 
-            color: var(--text-muted); 
-            line-height: 1.6; 
-            margin-bottom: 8px; 
-        }
-        ul { 
-            padding-left: 20px; 
-        }
 
-        /* Animações */
-        .reveal { 
-            opacity: 0; 
-            transform: translateY(40px); 
-            transition: all 0.6s ease-out; 
-        }
-        .reveal.visible { 
-            opacity: 1; 
-            transform: translateY(0); 
-        }
-
-        /* Botão flutuante */
-        #fab-btn { 
-            position: fixed; 
-            bottom: 30px; 
-            left: 50%; 
-            transform: translateX(-50%) scale(0.8); 
-            background: #000; 
-            color: var(--neon-purple); 
-            border: 2px solid var(--neon-purple); 
-            box-shadow: var(--neon-shadow); 
-            padding: 15px 40px; 
-            border-radius: 30px; 
-            font-size: 1.2rem; 
-            font-weight: bold; 
-            text-transform: uppercase; 
-            cursor: pointer; 
-            opacity: 0; 
-            pointer-events: none; 
-            transition: all 0.4s ease; 
-            z-index: 1000; 
-        }
-        #fab-btn.show { 
-            opacity: 1; 
-            transform: translateX(-50%) scale(1); 
-            pointer-events: auto; 
-        }
-        #fab-btn:hover { 
-            background: var(--neon-purple); 
-            color: #fff; 
-            box-shadow: 0 0 30px var(--neon-purple); 
-        }
-
-        @keyframes pulse { 
-            0% { box-shadow: 0 0 5px var(--neon-purple); } 
-            50% { box-shadow: 0 0 25px var(--neon-purple); } 
-            100% { box-shadow: 0 0 5px var(--neon-purple); } 
-        }
-        #fab-btn.show { 
-            animation: pulse 2s infinite; 
-        }
-
-        /* Formulário */
-        .input-group { 
-            margin-bottom: 20px; 
-        }
-        .input-group label { 
-            display: block; 
-            margin-bottom: 8px; 
-            color: var(--neon-purple); 
-            font-weight: bold; 
-        }
-        .input-group input { 
-            width: 100%; 
-            padding: 15px; 
-            background: #000; 
-            border: 1px solid var(--neon-purple); 
-            color: #fff; 
-            border-radius: 8px; 
-            outline: none; 
-            transition: 0.3s; 
-        }
-        .input-group input:focus { 
-            box-shadow: var(--neon-shadow); 
-        }
-        
-        .btn-full { 
-            width: 100%; 
-            background: var(--neon-purple); 
-            color: #fff; 
-            border: none; 
-            padding: 15px; 
-            border-radius: 8px; 
-            font-size: 1.1rem; 
-            font-weight: bold; 
-            cursor: pointer; 
-            text-transform: uppercase; 
-            margin-top: 10px; 
-            box-shadow: var(--neon-shadow); 
-            transition: 0.3s; 
-        }
-        .btn-full:active { 
-            transform: scale(0.95); 
-        }
-        .btn-outline { 
-            background: transparent; 
-            border: 1px solid var(--neon-purple); 
-            color: var(--neon-purple); 
-            box-shadow: none; 
-            margin-top: 15px; 
-        }
-
-        /* Admin */
-        .admin-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            width: 100%;
-        }
-
-        .admin-card {
-            background: var(--surface-color);
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .admin-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 4px; height: 100%;
-            background: var(--neon-purple);
-            box-shadow: 0 0 15px var(--neon-shadow);
-        }
-
-        .admin-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--neon-purple);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.8), 0 0 20px var(--neon-shadow);
-        }
-
-        .admin-card h3 {
-            color: var(--neon-purple);
-            margin-bottom: 10px;
-            font-size: 1.4rem;
-            text-transform: uppercase;
-        }
-
-        .admin-card p {
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-            color: #ccc;
-        }
-        .admin-card p strong { color: #fff; }
-
-        /* Login Admin */
-        .login-box {
-            max-width: 400px;
-            margin: 100px auto;
-            background: var(--surface-color);
-            padding: 40px;
+        .sobre-imagem img {
+            max-width: 100%;
             border-radius: 15px;
-            border: 1px solid var(--neon-purple);
-            box-shadow: var(--neon-shadow);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        .login-box input {
-            width: 100%;
-            padding: 15px;
-            margin: 15px 0;
-            background: #000;
-            border: 1px solid var(--neon-purple);
-            color: #fff;
-            border-radius: 8px;
-            outline: none;
+        .servicos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
         }
 
-        /* Chaveamento */
-        .bracket-wrapper {
-            display: flex;
-            flex-direction: row;
-            align-items: stretch;
-            justify-content: flex-start;
-            gap: 60px;
-            width: 100%;
-            overflow-x: auto;
-            padding-bottom: 30px;
-            padding-top: 10px;
-        }
-
-        .round {
+        .servico-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
-            gap: 30px;
-            min-width: 250px;
         }
 
-        .round h3 {
-            text-align: center;
-            color: var(--neon-purple);
-            text-transform: uppercase;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px var(--neon-shadow);
+        .servico-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
         }
 
-        .matchup { 
-            display: flex; 
-            flex-direction: column; 
-            background: var(--surface-color); 
-            border-radius: 12px; 
-            border: 1px solid #222;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.8), 0 0 10px rgba(176, 38, 255, 0.05); 
-            position: relative;
-            transition: 0.3s;
-            animation: slideIn 0.5s ease forwards;
+        .servico-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--azul-claro);
         }
 
-        .matchup:hover {
-            transform: translateY(-3px);
-            border-color: var(--neon-purple);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.9), 0 0 20px var(--neon-shadow);
+        .servico-info {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
-        .team { 
-            padding: 15px; 
-            font-size: 1.1rem; 
-            font-weight: 700; 
-            text-align: center; 
-            text-transform: uppercase;
-        }
-        .team:first-child { 
-            border-bottom: 1px solid #222; 
+        .servico-info h4 {
+            color: var(--azul-escuro);
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
         }
 
-        .vs {
-            position: absolute; 
-            top: 50%; 
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--bg-color); 
-            color: var(--neon-purple);
-            font-size: 0.8rem; 
-            font-weight: 900;
-            padding: 4px 8px; 
-            border-radius: 5px; 
-            border: 1px solid #222;
-        }
-        
-        .warning { 
-            color: var(--neon-purple); 
-            font-weight: bold; 
-            text-align: center; 
-            font-size: 1.2rem; 
-            margin-top: 20px; 
+        .servico-info p {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            flex: 1;
         }
 
-        .btn { 
-            background: transparent; 
-            color: var(--neon-purple); 
-            border: 2px solid var(--neon-purple); 
-            padding: 12px 25px; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            font-size: 1rem; 
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 10px transparent;
-            margin-bottom: 20px;
+        .servico-info .btn-saiba-mais {
+            align-self: flex-start;
+            color: var(--azul-claro);
+            font-weight: 800;
+            text-decoration: none;
+            transition: color 0.3s;
         }
 
-        .btn:hover { 
-            background: var(--neon-purple); 
-            color: #fff;
-            box-shadow: 0 0 20px var(--neon-shadow);
-            transform: scale(1.05);
+        .servico-info .btn-saiba-mais:hover {
+            color: var(--azul-medio);
         }
 
-        .btn-danger {
-            border-color: var(--danger);
-            color: var(--danger);
-        }
-        .btn-danger:hover {
-            background: var(--danger);
-            box-shadow: 0 0 20px rgba(255, 38, 38, 0.6);
-        }
-
-        @keyframes slideIn { 
-            from { opacity: 0; transform: translateX(-20px); } 
-            to { opacity: 1; transform: translateX(0); } 
+        footer {
+            background-color: var(--azul-escuro);
+            color: var(--texto-claro);
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
         }
 
-        ::-webkit-scrollbar { 
-            height: 10px; 
-            width: 10px; 
+        /* CORREÇÃO DA LOGO NO RODAPÉ */
+        .footer-logo {
+            height: 70px;
+            width: auto;
+            background-color: #ffffff;
+            padding: 5px 10px;
+            border-radius: 8px;
         }
-        ::-webkit-scrollbar-track { 
-            background: var(--bg-color); 
+
+        .footer-info p {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #94a3b8;
         }
-        ::-webkit-scrollbar-thumb { 
-            background: #333; 
-            border-radius: 10px; 
+
+        .floating-whatsapp {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--cor-whatsapp);
+            color: white;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.2rem;
+            text-decoration: none;
+            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s;
+            z-index: 1000;
         }
-        ::-webkit-scrollbar-thumb:hover { 
-            background: var(--neon-purple); 
+
+        .floating-whatsapp:hover {
+            transform: scale(1.1);
+            background-color: var(--hover-whatsapp);
+        }
+
+        @media (max-width: 900px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            nav ul {
+                gap: 10px;
+            }
+            nav a {
+                font-size: 0.9rem;
+                padding: 5px;
+            }
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 4rem 2rem;
+                border-bottom-left-radius: 20px;
+                border-bottom-right-radius: 20px;
+            }
+            .hero-text {
+                padding-right: 0;
+                margin-bottom: 2rem;
+            }
+            .hero-text h1 {
+                font-size: 2.2rem;
+            }
+            .sobre-content {
+                flex-direction: column;
+                padding: 2rem;
+            }
+            footer {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
 
-    <button id="view-toggle" onclick="toggleDeviceView()">PC View</button>
+    <div class="watermark"></div>
 
-    <div id="app-container" class="app-container mobile-mode">
-        
-        <!-- TELA HOME -->
-        <div id="screen-home" class="screen active">
-            <!-- Tabs principais -->
-            <div class="main-tabs" style="margin-bottom: 0;">
-                <button class="main-tab-btn active" onclick="switchMainTab('inscricao')">Inscrição</button>
-                <button class="main-tab-btn" onclick="switchMainTab('admin')">Admin</button>
+    <header>
+        <!-- Lembre-se de renomear o arquivo para logo.png para evitar erros -->
+        <img src="Gh e D (1).png" alt="Gh & Drei Logo" class="logo-header">
+        <nav>
+            <ul>
+                <li><a href="#inicio" class="active">Início</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#servicos">Serviços</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="inicio" class="hero">
+            <div class="hero-text">
+                <h1>Vamos tirar seus <span>planos do papel</span> usando <span>tecnologia</span></h1>
+                <p>Desenvolvemos soluções ergonômicas e personalizadas conforme o seu negócio. Qualidade profissional com um investimento que cabe no seu projeto.</p>
+                
+                <a href="https://api.whatsapp.com/send?phone=5515974011938&text=Ol%C3%A1%2C%20Gostaria%20de%20Contratar%20Um%20Servi%C3%A7o%20Ou%20Saber%20Mais%20Sobre." 
+                   class="btn-cta" target="_blank">
+                   Fale com a Gente
+                </a>
             </div>
-
-            <!-- Conteúdo da Inscrição -->
-            <div id="content-inscricao" class="main-content active">
-                <header>
-                    <h1>Copa 4x4 TROPINHA DO APZIN!</h1>
-                    <p>Torneio Oficial Organizado Por Gh E Administração!</p>
-                </header>
-
-                <section class="reveal">
-                    <h2>Como Funciona</h2>
-                    <div class="box">
-                        <h3>1. Inscrição</h3>
-                        <p>Cadastre sua line preenchendo o formulário com os nicks exatos do jogo.</p>
-                    </div>
-                    <div class="box">
-                        <h3>2. Chaveamento</h3>
-                        <p>O sorteio é aleatório e define os confrontos do mata-mata (16 avos até a final).</p>
-                    </div>
-                    <div class="box">
-                        <h3>3. Disputa</h3>
-                        <p>Crie a sala no horário marcado. O time que vencer avança, o perdedor está fora!</p>
-                    </div>
-                </section>
-
-                <section class="reveal" style="margin-bottom: 100px;">
-                    <h2>Regras</h2>
-                    <div class="box">
-                        <ul>
-                            <li>Apenas Alok, Kelly, Moco, Maxim, Leon e Jota.</li>
-                            <li>Pets Somente Mestre Trigo, Patopinho e Panda!</li>
-                            <li>Full Ump Xm8 Mp40</li>
-                            <li>Desert e Mini-Uzi Válida Somente no Primeiro Round!</li>
-                            <li>Atraso máximo de 5 minutos para iniciar a sala. W.O automático após isso.</li>
-                            <li>Respeito é obrigatório no lobby e no grupo do WhatsApp.</li>
-                        </ul>
-                    </div>
-                </section>
-
-                <button id="fab-btn" onclick="switchScreen('screen-form')">Inscreva-se</button>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Equipe trabalhando em tecnologia" style="max-width: 100%; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
             </div>
+        </section>
 
-            <!-- Conteúdo do Admin -->
-            <div id="content-admin" class="main-content" style="display: none;">
-                <div id="admin-login" class="login-box">
-                    <h2 style="font-size: 1.5rem;">Acesso Admin</h2>
-                    <input type="password" id="admin-pass" placeholder="Digite a senha" />
-                    <button class="btn-full" onclick="checkAdminPassword()">Entrar</button>
-                    <button class="btn-full btn-outline" onclick="switchMainTab('inscricao')">Voltar</button>
+        <section id="sobre">
+            <h2 class="section-title">Sobre Nós</h2>
+            <div class="sobre-content">
+                <div class="sobre-texto">
+                    <h3>Dois amigos, um propósito.</h3>
+                    <p>Somos a <strong>Gh & Drei</strong>, uma dupla de amigos apaixonados por tecnologia e design. Nosso propósito é simples: ajudar pequenas e médias empresas a crescerem no ambiente digital.</p>
+                    <p>Unimos a criatividade do design ergonômico com a robustez da programação para criar soluções que realmente funcionam para você. Não somos apenas desenvolvedores, somos seus parceiros na jornada digital.</p>
                 </div>
-
-                <div id="admin-panel" style="display: none;">
-                    <h2>Times Inscritos</h2>
-                    <button class="btn btn-danger" onclick="clearData()">Zerar Todas as Inscrições</button>
-                    <div class="admin-grid" id="adminGrid"></div>
-                    
-                    <h2 style="margin-top: 40px;">Gerador de Chaves</h2>
-                    <button class="btn" onclick="generateDynamicBracket()">Gerar / Sortear Chaves</button>
-                    <div class="bracket-wrapper" id="bracketContainer">
-                        <div class="warning">Clique no botão acima para sortear as chaves.</div>
-                    </div>
+                <div class="sobre-imagem">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Dois amigos trabalhando juntos">
                 </div>
             </div>
+        </section>
+
+        <section id="servicos">
+            <h2 class="section-title">Nossos Serviços</h2>
+            <div class="servicos-grid">
+                
+                <div class="servico-card">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sistemas Automatizados">
+                    <div class="servico-info">
+                        <h4>Sistemas Automatizados</h4>
+                        <p>Transformamos tarefas manuais e cansativas em sistemas inteligentes. Tenha o controle total do seu negócio com automação sob medida.</p>
+                        <a href="https://api.whatsapp.com/send?phone=5515974011938&text=Ol%C3%A1%2C%20Gostaria%20de%20saber%20mais%20sobre%20Sistemas%20Automatizados." class="btn-saiba-mais" target="_blank">Saiba Mais →</a>
+                    </div>
+                </div>
+
+                <div class="servico-card">
+                    <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sites Profissionais">
+                    <div class="servico-info">
+                        <h4>Sites Profissionais</h4>
+                        <p>Conquiste novos clientes online com um site rápido, responsivo e otimizado. Estruturamos seu espaço na internet com as melhores tecnologias.</p>
+                        <a href="https://api.whatsapp.com/send?phone=5515974011938&text=Ol%C3%A1%2C%20Gostaria%20de%20saber%20mais%20sobre%20Sites%20Profissionais." class="btn-saiba-mais" target="_blank">Saiba Mais →</a>
+                    </div>
+                </div>
+
+                <div class="servico-card">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cardápios Digitais">
+                    <div class="servico-info">
+                        <h4>Cardápios Digitais</h4>
+                        <p>Modernize seu restaurante ou lanchonete com um cardápio digital interativo. Fácil de atualizar e acessível para todos os seus clientes.</p>
+                        <a href="https://api.whatsapp.com/send?phone=5515974011938&text=Ol%C3%A1%2C%20Gostaria%20de%20saber%20mais%20sobre%20Card%C3%A1pios%20Digitais." class="btn-saiba-mais" target="_blank">Saiba Mais →</a>
+                    </div>
+                </div>
+
+                <div class="servico-card">
+                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Serviços de TI">
+                    <div class="servico-info">
+                        <h4>Serviços de TI</h4>
+                        <p>Suporte técnico, manutenção de computadores, configuração de redes e consultoria em tecnologia para o seu dia a dia.</p>
+                        <a href="https://api.whatsapp.com/send?phone=5515974011938&text=Ol%C3%A1%2C%20Gostaria%20de%20saber%20mais%20sobre%20Servi%C3%A7os%20de%20TI." class="btn-saiba-mais" target="_blank">Saiba Mais →</a>
+                    </div>
+                </div>
+
+                <div class="servico-card">
+                    <img src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Portfólio do seu Negócio">
+                    <div class="servico-info">
+                        <h4>Portfólio do seu Negócio</h4>
+                        <p>Apresente sua empresa com elegância e profissionalismo. Um cartão de visitas digital de alto impacto para elevar sua autoridade no mercado.</p>
+                        <a href="https://api.whatsapp.com/send?phone=5515974011938&text=Ol%C3%A1%2C%20Gostaria%20de%20saber%20mais%20sobre%20Portf%C3%B3lio%20para%20Neg%C3%B3cio." class="btn-saiba-mais" target="_blank">Saiba Mais →</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-info">
+            <p>&copy; 2026 Gh & Drei - Web Design & Dev System.</p>
+            <p>Design ergonômico feito para você.</p>
         </div>
+        <img src="Gh e D (1).png" alt="Gh & Drei Logo" class="footer-logo">
+    </footer>
 
-        <!-- TELA FORMULÁRIO -->
-        <div id="screen-form" class="screen">
-            <h2 style="text-align: center; margin-top: 20px;">Sua Line</h2>
-            <form id="regForm">
-                <div class="input-group">
-                    <label>Nome do Time</label>
-                    <input type="text" id="tName" required placeholder="LOUD, Fluxo, etc...">
-                </div>
-                <div class="input-group">
-                    <label>WhatsApp do Capitão</label>
-                    <input type="tel" id="tPhone" required placeholder="(11) 99999-9999">
-                </div>
-                <div class="input-group">
-                    <label>Capitão (P1)</label>
-                    <input type="text" id="p1" required placeholder="Nick in-game">
-                </div>
-                <div class="input-group">
-                    <label>Jogador 2 (P2)</label>
-                    <input type="text" id="p2" required placeholder="Nick in-game">
-                </div>
-                <div class="input-group">
-                    <label>Jogador 3 (P3)</label>
-                    <input type="text" id="p3" required placeholder="Nick in-game">
-                </div>
-                <div class="input-group">
-                    <label>Jogador 4 (P4)</label>
-                    <input type="text" id="p4" required placeholder="Nick in-game">
-                </div>
-                <button type="submit" class="btn-full">Confirmar Inscrição</button>
-                <button type="button" class="btn-full btn-outline" onclick="switchScreen('screen-home')">Voltar</button>
-            </form>
-        </div>
-
-    </div>
+    <a href="https://api.whatsapp.com/send?phone=5515974011938&text=Ol%C3%A1%2C%20Gostaria%20de%20Contratar%20Um%20Servi%C3%A7o%20Ou%20Saber%20Mais%20Sobre." 
+       class="floating-whatsapp" 
+       target="_blank" 
+       title="Chamar no WhatsApp">
+       <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+       </svg>
+    </a>
 
     <script>
-        // ==== VARIÁVEIS GLOBAIS ====
-        let isMobile = true;
-        const appContainer = document.getElementById('app-container');
-        const viewToggleBtn = document.getElementById('view-toggle');
-        let isAdminLogged = false;
+        const sections = document.querySelectorAll("section");
+        const navLi = document.querySelectorAll("nav ul li a");
 
-        // ==== FUNÇÕES DE VISUALIZAÇÃO ====
-        function toggleDeviceView() {
-            isMobile = !isMobile;
-            if(isMobile) {
-                appContainer.className = 'app-container mobile-mode';
-                viewToggleBtn.innerText = 'PC View';
-            } else {
-                appContainer.className = 'app-container pc-mode';
-                viewToggleBtn.innerText = 'Mobile View';
-            }
-        }
-
-        // ==== NAVEGAÇÃO ENTRE TELAS ====
-        function switchScreen(targetId) {
-            const current = document.querySelector('.screen.active');
-            const target = document.getElementById(targetId);
-            
-            current.style.opacity = '0';
-            setTimeout(() => {
-                current.classList.remove('active');
-                current.style.display = 'none';
-                
-                target.style.display = 'block';
-                setTimeout(() => {
-                    target.classList.add('active');
-                    target.style.opacity = '1';
-                    appContainer.scrollTop = 0;
-                }, 50);
-            }, 400);
-        }
-
-        // ==== TABS PRINCIPAIS ====
-        function switchMainTab(tab) {
-            document.querySelectorAll('.main-tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.main-content').forEach(content => content.style.display = 'none');
-            
-            if(tab === 'inscricao') {
-                document.querySelectorAll('.main-tab-btn')[0].classList.add('active');
-                document.getElementById('content-inscricao').style.display = 'block';
-                appContainer.scrollTop = 0;
-            } else {
-                document.querySelectorAll('.main-tab-btn')[1].classList.add('active');
-                document.getElementById('content-admin').style.display = 'block';
-                appContainer.scrollTop = 0;
-                
-                if(isAdminLogged) {
-                    document.getElementById('admin-login').style.display = 'none';
-                    document.getElementById('admin-panel').style.display = 'block';
-                    loadAdminCards();
-                } else {
-                    document.getElementById('admin-login').style.display = 'block';
-                    document.getElementById('admin-panel').style.display = 'none';
+        window.addEventListener("scroll", () => {
+            let current = "";
+            sections.forEach((section) => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - sectionHeight / 3) {
+                    current = section.getAttribute("id");
                 }
-            }
-        }
+            });
 
-        // ==== LOGIN ADMIN ====
-        function checkAdminPassword() {
-            const password = document.getElementById('admin-pass').value;
-            if(password === 'ADM4X4') {
-                isAdminLogged = true;
-                document.getElementById('admin-login').style.display = 'none';
-                document.getElementById('admin-panel').style.display = 'block';
-                loadAdminCards();
-                document.getElementById('admin-pass').value = '';
-            } else {
-                alert('Senha incorreta!');
-                document.getElementById('admin-pass').value = '';
-            }
-        }
-
-        // ==== SCROLL REVEAL + FAB ====
-        const fabBtn = document.getElementById('fab-btn');
-        const reveals = document.querySelectorAll('.reveal');
-
-        appContainer.addEventListener('scroll', () => {
-            if (appContainer.scrollTop > 150) {
-                fabBtn.classList.add('show');
-            } else {
-                fabBtn.classList.remove('show');
-            }
-
-            reveals.forEach(el => {
-                const elementTop = el.getBoundingClientRect().top;
-                const containerHeight = appContainer.clientHeight;
-                if(elementTop < containerHeight - 50) {
-                    el.classList.add('visible');
+            navLi.forEach((a) => {
+                a.classList.remove("active");
+                if (a.getAttribute("href").includes(current)) {
+                    a.classList.add("active");
                 }
             });
         });
-
-        appContainer.dispatchEvent(new Event('scroll'));
-
-        // ==== SALVAR FORMULÁRIO ====
-        document.getElementById('regForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const data = {
-                id: Date.now(),
-                name: document.getElementById('tName').value,
-                phone: document.getElementById('tPhone').value,
-                p1: document.getElementById('p1').value,
-                p2: document.getElementById('p2').value,
-                p3: document.getElementById('p3').value,
-                p4: document.getElementById('p4').value
-            };
-
-            let teams = JSON.parse(localStorage.getItem('ff_teams')) || [];
-            teams.push(data);
-            localStorage.setItem('ff_teams', JSON.stringify(teams));
-
-            alert('Time inscrito com sucesso no campeonato!');
-            this.reset();
-            switchScreen('screen-home');
-        });
-
-        // ==== CARREGAR CARDS ADMIN ====
-        function loadAdminCards() {
-            const grid = document.getElementById('adminGrid');
-            const teams = JSON.parse(localStorage.getItem('ff_teams')) || [];
-            
-            grid.innerHTML = '';
-
-            if (teams.length === 0) {
-                grid.innerHTML = '<div class="warning" style="grid-column: 1 / -1;">Nenhum time inscrito ainda.</div>';
-                return;
-            }
-
-            teams.forEach(team => {
-                const card = document.createElement('div');
-                card.className = 'admin-card';
-                card.innerHTML = `
-                    <h3>${team.name}</h3>
-                    <p><strong>WhatsApp:</strong> ${team.phone}</p>
-                    <p><strong>P1 (Capitão):</strong> ${team.p1}</p>
-                    <p><strong>P2:</strong> ${team.p2}</p>
-                    <p><strong>P3:</strong> ${team.p3}</p>
-                    <p><strong>P4:</strong> ${team.p4}</p>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        // ==== LIMPAR DADOS ====
-        function clearData() {
-            if (confirm("ATENÇÃO: Deseja apagar permanentemente todas as inscrições?")) {
-                localStorage.removeItem('ff_teams');
-                loadAdminCards();
-                document.getElementById('bracketContainer').innerHTML = '<div class="warning">Chaveamento resetado. Inscreva novos times.</div>';
-            }
-        }
-
-        // ==== SORTEAR TIMES ====
-        function shuffleArray(array) {
-            let shuffled = array.slice();
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled;
-        }
-
-        // ==== GERAR CHAVEAMENTO ====
-        function generateDynamicBracket() {
-            const container = document.getElementById('bracketContainer');
-            let registeredTeams = JSON.parse(localStorage.getItem('ff_teams')) || [];
-            
-            container.innerHTML = '';
-
-            if (registeredTeams.length < 2) {
-                container.innerHTML = '<div class="warning">Mínimo de 2 times necessários para gerar o chaveamento!</div>';
-                return;
-            }
-
-            let powerOf2 = 2;
-            while (powerOf2 < registeredTeams.length) {
-                powerOf2 *= 2;
-            }
-
-            let teams = shuffleArray(registeredTeams);
-
-            while (teams.length < powerOf2) {
-                teams.push({ name: 'W.O (BYE)' });
-            }
-
-            let roundsData = [];
-            let currentRoundTeams = teams;
-
-            while (currentRoundTeams.length >= 2) {
-                let matches = [];
-                let nextRoundPlaceholders = [];
-
-                for (let i = 0; i < currentRoundTeams.length; i += 2) {
-                    matches.push({
-                        t1: currentRoundTeams[i].name,
-                        t2: currentRoundTeams[i+1].name
-                    });
-                    nextRoundPlaceholders.push({ name: 'Vencedor' });
-                }
-                roundsData.push(matches);
-                currentRoundTeams = nextRoundPlaceholders;
-            }
-
-            const totalRounds = roundsData.length;
-            const roundNames = [];
-            
-            for (let i = 0; i < totalRounds; i++) {
-                let matchCount = roundsData[i].length;
-                if (matchCount === 1) roundNames.push("Grande Final");
-                else if (matchCount === 2) roundNames.push("Semifinal");
-                else if (matchCount === 4) roundNames.push("Quartas de Final");
-                else if (matchCount === 8) roundNames.push("Oitavas de Final");
-                else if (matchCount === 16) roundNames.push("16 Avos");
-                else roundNames.push(`Rodada de ${matchCount * 2}`);
-            }
-
-            roundsData.forEach((round, roundIndex) => {
-                const roundDiv = document.createElement('div');
-                roundDiv.className = 'round';
-                
-                const title = document.createElement('h3');
-                title.innerText = roundNames[roundIndex];
-                roundDiv.appendChild(title);
-
-                round.forEach((match, matchIndex) => {
-                    const matchDiv = document.createElement('div');
-                    matchDiv.className = 'matchup';
-                    matchDiv.style.animationDelay = `${(roundIndex * 0.15) + (matchIndex * 0.05)}s`;
-
-                    let t1Style = (match.t1.includes('W.O') || match.t1 === 'Vencedor') ? 'color:#666; font-weight:normal;' : 'color:#fff;';
-                    let t2Style = (match.t2.includes('W.O') || match.t2 === 'Vencedor') ? 'color:#666; font-weight:normal;' : 'color:#fff;';
-
-                    matchDiv.innerHTML = `
-                        <div class="team" style="${t1Style}">${match.t1}</div>
-                        <div class="vs">VS</div>
-                        <div class="team" style="${t2Style}">${match.t2}</div>
-                    `;
-                    roundDiv.appendChild(matchDiv);
-                });
-                container.appendChild(roundDiv);
-            });
-        }
-
-        // ==== INICIALIZAÇÃO ====
-        loadAdminCards();
     </script>
 </body>
 </html>
